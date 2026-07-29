@@ -333,23 +333,26 @@ self.onmessage=function(e){
     const ds=new Array(B);
     for(let j=0;j<B;j++)ds[j]=(GPx[j]-qx+P_*2n)%P_;
     const inv=batchInv(ds,P_);
+    // FIX: qx,qy fixos durante o batch (base imutável), como no Python
     let lx=qx,ly=qy;
     for(let j=0;j<B;j++){
-      if(inv[j]===0n){[lx,ly]=scalarmul(k+BigInt(j+1));} else {
-        const lam=(GPy[j]-ly+P_*2n)%P_*inv[j]%P_;
-        const x3=modp(lam*lam-lx-GPx[j]);const y3=modp(lam*(lx-x3)-ly);lx=x3;ly=y3;
+      let nx,ny;
+      if(inv[j]===0n){
+        [nx,ny]=scalarmul(k+BigInt(j+1));lx=nx;ly=ny;
+      } else {
+        const lam=(GPy[j]-qy+P_*2n)%P_*inv[j]%P_;
+        nx=modp(lam*lam-qx-GPx[j]);ny=modp(lam*(qx-nx)-qy);lx=nx;ly=ny;
       }
-      const kk=k+BigInt(j+1);
-      if(check(kk,lx,ly))return;
+      if(check(k+BigInt(j+1),nx,ny))return;
     }
     qx=lx;qy=ly;k+=BigInt(B);tested+=BigInt(B);
     const now=Date.now();
     if(now-lastReport>=1500){
-      self.postMessage({type:'progress',wid,tested:tested.toString(),pos:'0x'+k.toString(16)});
-      lastReport=now;
+      self.postMessage({type:'progress',wid,delta:tested.toString(),pos:'0x'+k.toString(16)});
+      tested=0n;lastReport=now;
     }
   }
-  self.postMessage({type:'done',wid,tested:tested.toString()});
+  self.postMessage({type:'done',wid,delta:tested.toString()});
 };
 `;
 
@@ -557,13 +560,13 @@ const App = {
 
   onWorkerMsg(d) {
     if (d.type === 'progress') {
-      this.tested += BigInt(d.tested);
+      this.tested += BigInt(d.delta);
       if (this.wkData[d.wid]) this.wkData[d.wid].pos = d.pos;
     } else if (d.type === 'hit') {
       this.showHit(d);
       this.stop();
     } else if (d.type === 'done') {
-      this.tested += BigInt(d.tested);
+      this.tested += BigInt(d.delta);
       if (this.wkData[d.wid]) this.wkData[d.wid].active = false;
       const active = Object.values(this.wkData).filter(w => w.active).length;
       document.getElementById('wkStat').textContent = `${active}/${this.workers.length} ativos`;
