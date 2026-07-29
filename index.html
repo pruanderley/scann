@@ -418,6 +418,93 @@
         }
 
         /* ============================================================
+           CONFIGURAÇÃO (NOVO)
+           ============================================================ */
+        .config-panel {
+            background: #0f1a2e;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #1a2a4a;
+        }
+        .config-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            align-items: center;
+        }
+        .config-group {
+            flex: 1 1 160px;
+            min-width: 120px;
+        }
+        .config-group label {
+            display: block;
+            color: #4a9eff;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .config-group input,
+        .config-group select {
+            width: 100%;
+            background: #0a0e17;
+            border: 1px solid #1a2a4a;
+            color: #e8edf5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            outline: none;
+        }
+        .config-group input[type="file"] {
+            padding: 3px 0;
+            border: none;
+            background: transparent;
+            color: #5a7a9a;
+            font-size: 10px;
+        }
+        .config-group input[type="file"]::file-selector-button {
+            background: #1a2a4a;
+            border: none;
+            color: #e8edf5;
+            padding: 2px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+        }
+        .config-group input[type="file"]::file-selector-button:hover {
+            background: #2a3a5a;
+        }
+        .config-group .hint {
+            color: #5a7a9a;
+            font-size: 9px;
+            display: block;
+            margin-top: 2px;
+        }
+        .config-group .badge-config {
+            background: #1a2a4a;
+            color: #8ab4d6;
+            padding: 0 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            margin-left: 4px;
+        }
+        .config-check {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #c8d6e5;
+            font-size: 12px;
+            padding-top: 6px;
+        }
+        .config-check input[type="checkbox"] {
+            accent-color: #4a9eff;
+            transform: scale(1.1);
+        }
+
+        /* ============================================================
            RESPONSIVO
            ============================================================ */
         @media (max-width: 600px) {
@@ -460,6 +547,9 @@
             .btn {
                 padding: 5px 12px;
                 font-size: 10px;
+            }
+            .config-group {
+                flex: 1 1 120px;
             }
         }
 
@@ -509,7 +599,7 @@
                 <i class="fas fa-terminal"></i> PUZZLE #71 SCANNER — v3.1
             </div>
             <div class="terminal-right">
-                <i class="fas fa-microchip"></i> <span id="workerCount">8</span> workers
+                <i class="fas fa-microchip"></i> <span id="workerCountDisplay">8</span> workers
                 <span id="statusDot"></span>
             </div>
         </div>
@@ -532,10 +622,57 @@
 
             <hr class="sep" />
 
-            <!-- ALVOS -->
+            <!-- ============================================================
+                 CONFIGURAÇÃO (NOVO)
+                 ============================================================ -->
+            <div class="config-panel">
+                <div class="config-row">
+
+                    <!-- TARGETS -->
+                    <div class="config-group">
+                        <label><i class="fas fa-bullseye"></i> ALVOS</label>
+                        <input type="file" id="targetsFile" accept=".txt" />
+                        <span class="hint" id="targetsStatus">Nenhum arquivo carregado</span>
+                    </div>
+
+                    <!-- RANGE -->
+                    <div class="config-group">
+                        <label><i class="fas fa-arrows-left-right"></i> RANGE</label>
+                        <select id="rangeSelect">
+                            <option value="50-60">50-60 bits (2^49 - 2^60)</option>
+                            <option value="61-70">61-70 bits (2^60 - 2^70)</option>
+                            <option value="71" selected>71 bits (Puzzle #71)</option>
+                            <option value="custom">Personalizado</option>
+                        </select>
+                        <input type="text" id="customRange" placeholder="ex: 30-71" style="display:none; margin-top:4px; width:100%; background:#0a0e17; border:1px solid #1a2a4a; color:#e8edf5; padding:2px 6px; border-radius:4px; font-family:'Courier New'; font-size:11px;" />
+                    </div>
+
+                    <!-- WORKERS -->
+                    <div class="config-group">
+                        <label><i class="fas fa-microchip"></i> WORKERS</label>
+                        <input type="number" id="workersInput" value="8" min="1" max="64" />
+                        <span class="hint">CPUs disponíveis: <span id="cpuCount">--</span></span>
+                    </div>
+
+                    <!-- UNCOMPRESSED -->
+                    <div class="config-group" style="flex:0 0 auto;">
+                        <label>&nbsp;</label>
+                        <div class="config-check">
+                            <input type="checkbox" id="uncompressedCheck" />
+                            <span>Uncompressed <span class="badge-config">pré-2012</span></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ESTATÍSTICAS -->
+            <hr class="sep" />
+
+            <!-- ALVOS (dinâmico) -->
             <div class="row">
                 <span class="label">ALVOS</span><span class="colon">:</span>
-                <span class="value"><span class="highlight" id="alvosCount">1</span> <span class="gray">(set)</span></span>
+                <span class="value"><span class="highlight" id="alvosCount">1</span> <span class="gray" id="alvosType">(set)</span></span>
             </div>
 
             <!-- FORMATOS -->
@@ -544,13 +681,13 @@
                 <span class="value">P2PKH/Bech32 <span class="badge">1 hash/chave</span></span>
             </div>
 
-            <!-- RANGE -->
+            <!-- RANGE (dinâmico) -->
             <div class="row">
                 <span class="label">RANGE</span><span class="colon">:</span>
                 <span class="value"><span class="highlight" id="rangeDisplay">71 bits  [2^70, 2^71)</span></span>
             </div>
 
-            <!-- KEYSPACE -->
+            <!-- KEYSPACE (dinâmico) -->
             <div class="row">
                 <span class="label">KEYSPACE</span><span class="colon">:</span>
                 <span class="value"><span class="green" id="keyspaceDisplay">1.18 T</span> <span class="gray">chaves</span></span>
@@ -603,20 +740,13 @@
 
             <hr class="sep" />
 
-            <!-- WORKERS -->
+            <!-- WORKERS (dinâmico) -->
             <div class="row" style="margin-bottom:4px;">
                 <span class="label label-sm" style="color:#4a9eff;">WORKERS</span>
                 <span class="value"><span class="gray" id="workersStatus">8/8 ativos</span></span>
             </div>
             <div class="worker-list" id="workerList">
-                <span class="worker-item"><span class="wid">▸ w0</span> <span class="pos">0x1a2b3c4d...</span></span>
-                <span class="worker-item"><span class="wid">▸ w1</span> <span class="pos">0x3e5f6a7b...</span></span>
-                <span class="worker-item"><span class="wid">▸ w2</span> <span class="pos">0x8c9d0e1f...</span></span>
-                <span class="worker-item"><span class="wid">▸ w3</span> <span class="pos">0x2a4b5c6d...</span></span>
-                <span class="worker-item"><span class="wid">▸ w4</span> <span class="pos">0x7e8f9a0b...</span></span>
-                <span class="worker-item"><span class="wid">▸ w5</span> <span class="pos">0x1c2d3e4f...</span></span>
-                <span class="worker-item"><span class="wid">▸ w6</span> <span class="pos">0x5a6b7c8d...</span></span>
-                <span class="worker-item"><span class="wid">▸ w7</span> <span class="pos">0x9e0f1a2b...</span></span>
+                <!-- preenchido via JS -->
             </div>
 
             <hr class="sep sep-thin" />
@@ -666,10 +796,9 @@
 
     <script>
         /**
-         * Puzzle #71 Scanner - Core
-         * v3.1 - Simulação fiel ao terminal
+         * Puzzle #71 Scanner - Core v3.1
+         * Agora com suporte a carregar targets, workers e range
          */
-
         const scanner = {
             running: false,
             paused: false,
@@ -680,17 +809,140 @@
             workers: [],
             hits: [],
             totalKeyspace: 1180591620717411303424,
+            targetCount: 1,
+            workerCount: 8,
+            rangeBits: 71,
 
+            // ============================================================
+            // INICIALIZAÇÃO
+            // ============================================================
             init() {
+                this.detectCPU();
+                this.bindEvents();
                 this.createWorkers();
                 this.updateUI();
                 setInterval(() => this.updateUI(), 1000);
                 console.log('🔍 Puzzle #71 Scanner v3.1 carregado!');
             },
 
+            // ============================================================
+            // DETECTAR CPU
+            // ============================================================
+            detectCPU() {
+                const cores = navigator.hardwareConcurrency || 4;
+                document.getElementById('cpuCount').textContent = cores;
+                if (parseInt(document.getElementById('workersInput').value) > cores) {
+                    document.getElementById('workersInput').value = Math.min(cores, 16);
+                }
+                this.workerCount = parseInt(document.getElementById('workersInput').value);
+            },
+
+            // ============================================================
+            // EVENTOS
+            // ============================================================
+            bindEvents() {
+                // Carregar arquivo de targets
+                document.getElementById('targetsFile').addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const content = ev.target.result;
+                        // Conta linhas não vazias que parecem endereços
+                        const lines = content.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+                        const valid = lines.filter(l => /^[13]/.test(l.trim()) || /^bc1/.test(l.trim()));
+                        this.targetCount = valid.length || 1;
+                        document.getElementById('targetsStatus').textContent = `${this.targetCount} alvos carregados`;
+                        document.getElementById('alvosCount').textContent = this.targetCount;
+                        document.getElementById('alvosType').textContent = '(set)';
+                        console.log(`📂 Carregados ${this.targetCount} alvos`);
+                    };
+                    reader.readAsText(file);
+                });
+
+                // Range
+                document.getElementById('rangeSelect').addEventListener('change', (e) => {
+                    const val = e.target.value;
+                    const customInput = document.getElementById('customRange');
+                    if (val === 'custom') {
+                        customInput.style.display = 'block';
+                        customInput.focus();
+                        this.updateRange(customInput.value);
+                    } else {
+                        customInput.style.display = 'none';
+                        this.updateRange(val);
+                    }
+                });
+
+                document.getElementById('customRange').addEventListener('input', (e) => {
+                    this.updateRange(e.target.value);
+                });
+
+                // Workers
+                document.getElementById('workersInput').addEventListener('input', (e) => {
+                    let v = parseInt(e.target.value) || 1;
+                    const max = navigator.hardwareConcurrency || 16;
+                    if (v > max) v = max;
+                    if (v < 1) v = 1;
+                    this.workerCount = v;
+                    document.getElementById('workerCountDisplay').textContent = v;
+                    this.createWorkers();
+                    this.updateUI();
+                });
+
+                // Uncompressed
+                document.getElementById('uncompressedCheck').addEventListener('change', () => {
+                    // apenas para feedback visual
+                    console.log('Uncompressed:', document.getElementById('uncompressedCheck').checked);
+                });
+            },
+
+            // ============================================================
+            // RANGE E KEYSPACE
+            // ============================================================
+            updateRange(input) {
+                let bits, min, max, display;
+                if (input.includes('-')) {
+                    const parts = input.split('-').map(s => parseInt(s.trim()));
+                    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                        const a = Math.min(parts[0], parts[1]);
+                        const b = Math.max(parts[0], parts[1]);
+                        bits = b;
+                        min = BigInt(1) << BigInt(a - 1);
+                        max = (BigInt(1) << BigInt(b)) - BigInt(1);
+                        display = `${a}-${b} bits  [2^${a-1}, 2^${b})`;
+                    }
+                } else {
+                    const n = parseInt(input);
+                    if (!isNaN(n) && n >= 1 && n <= 256) {
+                        bits = n;
+                        min = BigInt(1) << BigInt(n - 1);
+                        max = (BigInt(1) << BigInt(n)) - BigInt(1);
+                        display = `${n} bits  [2^${n-1}, 2^${n})`;
+                    }
+                }
+                if (min !== undefined && max !== undefined) {
+                    this.rangeBits = bits;
+                    this.totalKeyspace = Number(max - min + BigInt(1));
+                    if (this.totalKeyspace > 1e15) {
+                        // para números grandes, manter como BigInt internamente
+                    }
+                    document.getElementById('rangeDisplay').textContent = display;
+                    document.getElementById('keyspaceDisplay').textContent = this.human(this.totalKeyspace);
+                    // Reset progresso
+                    this.progress = 0;
+                    this.tested = 0;
+                    this.updateUI();
+                }
+            },
+
+            // ============================================================
+            // WORKERS
+            // ============================================================
             createWorkers() {
                 this.workers = [];
-                for (let i = 0; i < 8; i++) {
+                const n = this.workerCount;
+                for (let i = 0; i < n; i++) {
                     this.workers.push({
                         id: i,
                         pos: `0x${Math.floor(Math.random() * 0xFFFFFFFFFFFFFFFF).toString(16).padStart(16, '0')}...`,
@@ -698,19 +950,30 @@
                     });
                 }
                 this.renderWorkers();
+                document.getElementById('workerCountDisplay').textContent = n;
+                document.getElementById('workersStatus').textContent = `${n}/${n} ativos`;
             },
 
             renderWorkers() {
                 const container = document.getElementById('workerList');
                 if (!container) return;
-                container.innerHTML = this.workers.map(w =>
+                const maxShow = 8;
+                const show = this.workers.slice(0, maxShow);
+                let html = show.map(w =>
                     `<span class="worker-item">
                         <span class="wid">▸ w${w.id}</span> 
                         <span class="pos">${w.pos}</span>
                     </span>`
                 ).join('');
+                if (this.workers.length > maxShow) {
+                    html += `<span class="worker-more">+ ${this.workers.length - maxShow} mais</span>`;
+                }
+                container.innerHTML = html;
             },
 
+            // ============================================================
+            // CONTROLE
+            // ============================================================
             start() {
                 if (this.running) return;
                 this.running = true;
@@ -750,6 +1013,9 @@
                 console.log('🔄 Reiniciado');
             },
 
+            // ============================================================
+            // SIMULAÇÃO
+            // ============================================================
             simulate() {
                 if (!this.running || this.paused) return;
                 const interval = setInterval(() => {
@@ -773,6 +1039,9 @@
                 }, 1000);
             },
 
+            // ============================================================
+            // HIT
+            // ============================================================
             foundHit() {
                 const hit = {
                     key: `0x${Math.floor(Math.random() * 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).toString(16).padStart(64, '0')}`,
@@ -794,15 +1063,23 @@
                 console.log('💥 CHAVE ENCONTRADA!', hit);
             },
 
+            // ============================================================
+            // UI
+            // ============================================================
+            human(n) {
+                if (n > 1e12) return (n / 1e12).toFixed(2) + ' T';
+                if (n > 1e9) return (n / 1e9).toFixed(2) + ' B';
+                if (n > 1e6) return (n / 1e6).toFixed(2) + ' M';
+                if (n > 1e3) return (n / 1e3).toFixed(2) + ' K';
+                return n.toFixed(0);
+            },
+
             updateUI() {
                 const p = Math.min(this.progress, 100);
                 document.getElementById('progressFill').style.width = p + '%';
                 document.getElementById('progressLabel').textContent = p.toFixed(4) + '%';
 
-                const human = this.tested > 1e9 ? (this.tested / 1e9).toFixed(2) + ' B' :
-                              this.tested > 1e6 ? (this.tested / 1e6).toFixed(1) + ' M' :
-                              this.tested > 1e3 ? (this.tested / 1e3).toFixed(1) + ' K' :
-                              this.tested.toFixed(0);
+                const human = this.human(this.tested);
                 document.getElementById('testedDisplay').textContent = human;
                 document.getElementById('testedRaw').textContent = `(${this.tested.toLocaleString()})`;
                 document.getElementById('speedDisplay').innerHTML = `<strong>${this.speed.toLocaleString()}</strong>`;
@@ -813,7 +1090,7 @@
                 document.getElementById('timeDisplay').textContent = `${h}h ${m}m ${s}s`;
 
                 document.getElementById('workersStatus').textContent =
-                    `${this.workers.filter(w => w.active).length}/8 ativos`;
+                    `${this.workers.filter(w => w.active).length}/${this.workers.length} ativos`;
 
                 // Sparkline
                 const chars = '▁▂▃▄▅▆▇█';
@@ -840,10 +1117,14 @@
             }
         };
 
-        // Inicializa ao carregar
+        // ============================================================
+        // INICIALIZAR
+        // ============================================================
         document.addEventListener('DOMContentLoaded', () => scanner.init());
 
-        // Atalhos
+        // ============================================================
+        // ATALHOS
+        // ============================================================
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'c') {
                 e.preventDefault();
