@@ -1,41 +1,37 @@
-const CACHE_NAME = 'puzzle71-v3.3';
-const assetsToCache = [
-  './index.html',
-  './manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
+const CACHE_NAME = 'puzzle-scanner-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-192x192.png',
+  '/icon-512x512.png'
 ];
 
-// Instalação do Service Worker
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(assetsToCache);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
   );
-  self.skipWaiting();
 });
 
-// Ativação e limpeza de caches antigos
-self.addEventListener('activate', (event) => {
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
+  );
+});
+
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then((keys) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
+        cacheNames.map(cacheName => {
+          if (!cacheWhitelist.includes(cacheName)) {
+            return caches.delete(cacheName);
           }
         })
       );
-    })
-  );
-  self.clients.claim();
-});
-
-// Interceptação de requisições (Cache First, falling back to network)
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
     })
   );
 });

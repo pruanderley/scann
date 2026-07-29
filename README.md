@@ -1,49 +1,30 @@
-# 🔍 PUZZLE #71 SCANNER — v3.1
+# Puzzle #71 Scanner – PWA
 
-[![PWA](https://img.shields.io/badge/PWA-Enabled-blueviolet)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+Scanner de chaves privadas Bitcoin para o Puzzle #71, executado inteiramente no navegador usando secp256k1 puro em JavaScript. Totalmente offline após o primeiro carregamento.
 
-> **Bitcoin Private Key Scanner** — secp256k1 — Puzzle #71
+## Funcionalidades
+- Carregamento de `targets.txt` (P2PKH, Bech32, P2SH)
+- Range configurável (ex: 71 ou 50-60)
+- Multi‑workers via Web Workers
+- Criptografia real (SHA-256, RIPEMD-160, secp256k1) em JS puro
+- Salva hits no console (F12) – futuramente exportará arquivo
 
----
+## Como usar
+1. Acesse a página (ou instale como PWA)
+2. Carregue um arquivo de alvos (opcional – se não, busca o Puzzle #71)
+3. Defina o range de bits
+4. Clique em "Iniciar"
+5. Quando encontrar um hit, ele aparecerá no painel e no console
 
-## 📖 Sobre
+## Tecnologias
+- HTML5/CSS3/JavaScript puro
+- secp256k1, SHA-256, RIPEMD-160 implementados em JS
+- Web Workers para multi-threading
+- PWA (Service Worker, manifest)
 
-Scanner de chaves privadas Bitcoin para o **Puzzle #71**, com suporte a múltiplos formatos de endereço:
+## Instalação como PWA
+- No celular: abra no Chrome e toque em "Adicionar à tela inicial"
+- No PC: abra no Edge/Chrome e instale pelo ícone da barra de endereço
 
-- ✅ P2PKH (endereços `1...`)
-- ✅ Bech32 P2WPKH (endereços `bc1q...`)
-- ✅ P2SH-P2WPKH (endereços `3...`)
-
-**Versão Web** com Progressive Web App (PWA) — rode como app nativo no seu dispositivo!
-
----
-
-## 🚀 Funcionalidades
-
-| Recurso | Descrição |
-|---------|-----------|
-| **Multi-formato** | P2PKH, Bech32 e P2SH |
-| **Alvos customizados** | Carregue arquivo `targets.txt` |
-| **Índice Radix** | Busca otimizada em memória |
-| **Checkpoints** | Retomada automática |
-| **Interface Terminal** | Visual estilo terminal com animações |
-| **PWA** | Instalável como app |
-| **Offline** | Funciona sem internet |
-
----
-
-## 📦 Instalação
-
-### Como PWA (Recomendado)
-
-1. Acesse o site
-2. No navegador, clique em **"Instalar App"** ou **"Adicionar à Tela Inicial"**
-3. Abra como um app nativo
-
-### Como Site
-
-```bash
-git clone https://github.com/seu-usuario/puzzle71-scanner.git
-cd puzzle71-scanner
-python -m http.server 8080
+## Licença
+MIT
