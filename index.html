@@ -707,7 +707,7 @@ document.addEventListener('keydown', e => {
 // PWA — Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
+    navigator.serviceWorker.register('/scann/sw.js')
       .then(r => console.log('[PWA] Service Worker registrado:', r.scope))
       .catch(e => console.warn('[PWA] Service Worker erro:', e));
   });
