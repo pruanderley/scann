@@ -8,12 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
-    <title>PUZZLE #71 SCANNER — v3.1</title>
+    <title>PUZZLE #71 SCANNER — v3.3</title>
 
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json" />
-    
-    <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
 
     <style>
@@ -38,23 +35,17 @@
             overflow-x: hidden;
         }
 
-        /* ============================================================
-           CONTAINER PRINCIPAL
-           ============================================================ */
         .terminal {
             background: #0d1321;
             border: 1px solid #1a2a4a;
             border-radius: 12px;
             padding: 0;
-            max-width: 800px;
+            max-width: 820px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 180, 255, 0.05);
             overflow: hidden;
         }
 
-        /* ============================================================
-           BARRA SUPERIOR
-           ============================================================ */
         .terminal-header {
             background: #111a2e;
             padding: 10px 20px;
@@ -115,9 +106,6 @@
             50% { opacity: 0.3; }
         }
 
-        /* ============================================================
-           PAINEL
-           ============================================================ */
         .panel {
             padding: 16px 20px 20px 20px;
             font-family: 'Courier New', monospace;
@@ -160,7 +148,6 @@
             color: #8ab4d6;
         }
 
-        /* separadores */
         .sep {
             border: none;
             border-top: 1px solid #1a2a4a;
@@ -170,7 +157,6 @@
             border-top: 1px solid #0f1a2e;
         }
 
-        /* linhas */
         .row {
             display: flex;
             align-items: baseline;
@@ -226,7 +212,6 @@
             margin-left: 4px;
         }
 
-        /* barra de progresso */
         .progress-wrap {
             margin: 4px 0 2px 0;
             display: flex;
@@ -257,7 +242,6 @@
             font-weight: 600;
         }
 
-        /* sparkline */
         .spark {
             font-size: 14px;
             letter-spacing: 1px;
@@ -266,7 +250,6 @@
             min-width: 120px;
         }
 
-        /* workers */
         .worker-list {
             display: flex;
             flex-wrap: wrap;
@@ -288,7 +271,6 @@
             font-size: 12px;
         }
 
-        /* rodapé */
         .footer {
             margin-top: 8px;
             padding-top: 8px;
@@ -307,7 +289,6 @@
             color: #2a4a6a;
         }
 
-        /* hit */
         .hit-box {
             background: #0a1a12;
             border: 1px solid #34d399;
@@ -353,7 +334,6 @@
             color: #34d399;
         }
 
-        /* botões */
         .btn-group {
             margin-top: 14px;
             display: flex;
@@ -417,9 +397,6 @@
             padding-top: 8px;
         }
 
-        /* ============================================================
-           CONFIGURAÇÃO (NOVO)
-           ============================================================ */
         .config-panel {
             background: #0f1a2e;
             border-radius: 8px;
@@ -504,9 +481,23 @@
             transform: scale(1.1);
         }
 
-        /* ============================================================
-           RESPONSIVO
-           ============================================================ */
+        .breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            font-size: 11px;
+            color: #8ab4d6;
+        }
+        .breakdown span {
+            background: #0f1a2e;
+            padding: 1px 10px;
+            border-radius: 12px;
+            border: 1px solid #1a2a4a;
+        }
+        .breakdown .p2pkh { color: #34d399; }
+        .breakdown .bech32 { color: #22d3ee; }
+        .breakdown .p2sh { color: #c084fc; }
+
         @media (max-width: 600px) {
             .panel {
                 padding: 10px 12px 14px 12px;
@@ -552,7 +543,6 @@
                 flex: 1 1 120px;
             }
         }
-
         @media (max-width: 400px) {
             .panel {
                 font-size: 10px;
@@ -570,8 +560,6 @@
                 height: 10px;
             }
         }
-
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 4px;
             background: #0a0e17;
@@ -596,7 +584,7 @@
                 <span class="dot dot-green"></span>
             </div>
             <div class="terminal-title">
-                <i class="fas fa-terminal"></i> PUZZLE #71 SCANNER — v3.1
+                <i class="fas fa-terminal"></i> PUZZLE #71 SCANNER — v3.3
             </div>
             <div class="terminal-right">
                 <i class="fas fa-microchip"></i> <span id="workerCountDisplay">8</span> workers
@@ -617,25 +605,23 @@
                 <div class="line5">╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝╚══════╝</div>
             </div>
             <div class="banner-sub">
-                <span>S C A N N E R</span> · secp256k1 · v3.1
+                <span>S C A N N E R</span> · secp256k1 · v3.3 · <span id="targetsLoadedBadge">0 alvos carregados</span>
             </div>
 
             <hr class="sep" />
 
             <!-- ============================================================
-                 CONFIGURAÇÃO (NOVO)
+                 CONFIGURAÇÃO
                  ============================================================ -->
             <div class="config-panel">
                 <div class="config-row">
 
-                    <!-- TARGETS -->
                     <div class="config-group">
                         <label><i class="fas fa-bullseye"></i> ALVOS</label>
                         <input type="file" id="targetsFile" accept=".txt" />
                         <span class="hint" id="targetsStatus">Nenhum arquivo carregado</span>
                     </div>
 
-                    <!-- RANGE -->
                     <div class="config-group">
                         <label><i class="fas fa-arrows-left-right"></i> RANGE</label>
                         <select id="rangeSelect">
@@ -647,14 +633,15 @@
                         <input type="text" id="customRange" placeholder="ex: 30-71" style="display:none; margin-top:4px; width:100%; background:#0a0e17; border:1px solid #1a2a4a; color:#e8edf5; padding:2px 6px; border-radius:4px; font-family:'Courier New'; font-size:11px;" />
                     </div>
 
-                    <!-- WORKERS -->
                     <div class="config-group">
                         <label><i class="fas fa-microchip"></i> WORKERS</label>
                         <input type="number" id="workersInput" value="8" min="1" max="64" />
-                        <span class="hint">CPUs disponíveis: <span id="cpuCount">--</span></span>
+                        <span class="hint">
+                            Núcleos detectados: <strong id="cpuCount">--</strong> &nbsp;·&nbsp; 
+                            <span id="workerRecommendation">(recomendado: --)</span>
+                        </span>
                     </div>
 
-                    <!-- UNCOMPRESSED -->
                     <div class="config-group" style="flex:0 0 auto;">
                         <label>&nbsp;</label>
                         <div class="config-check">
@@ -664,15 +651,23 @@
                     </div>
 
                 </div>
+                <!-- Breakdown de formatos (aparece quando carregar targets) -->
+                <div id="formatBreakdown" style="margin-top:8px; display:none;">
+                    <div class="breakdown">
+                        <span class="p2pkh">🔵 P2PKH (1...): <strong id="cntP2pkh">0</strong></span>
+                        <span class="bech32">🟢 Bech32 (bc1...): <strong id="cntBech32">0</strong></span>
+                        <span class="p2sh">🟣 P2SH (3...): <strong id="cntP2sh">0</strong></span>
+                        <span class="gray">🗑️ Ignorados: <strong id="cntIgnored">0</strong></span>
+                    </div>
+                </div>
             </div>
 
-            <!-- ESTATÍSTICAS -->
             <hr class="sep" />
 
             <!-- ALVOS (dinâmico) -->
             <div class="row">
                 <span class="label">ALVOS</span><span class="colon">:</span>
-                <span class="value"><span class="highlight" id="alvosCount">1</span> <span class="gray" id="alvosType">(set)</span></span>
+                <span class="value"><span class="highlight" id="alvosCount">0</span> <span class="gray" id="alvosType">(nenhum)</span></span>
             </div>
 
             <!-- FORMATOS -->
@@ -698,7 +693,7 @@
             <!-- VELOCIDADE -->
             <div class="row">
                 <span class="label">VELOCIDADE</span><span class="colon">:</span>
-                <span class="value"><span class="green" id="speedDisplay"><strong>482.391</strong></span> <span class="gray">chaves/s</span></span>
+                <span class="value"><span class="green" id="speedDisplay"><strong>0</strong></span> <span class="gray">chaves/s</span></span>
             </div>
 
             <!-- HISTÓRICO -->
@@ -710,13 +705,13 @@
             <!-- TESTADAS -->
             <div class="row">
                 <span class="label">TESTADAS</span><span class="colon">:</span>
-                <span class="value"><span class="cyan" id="testedDisplay">42.7 M</span> <span class="gray" id="testedRaw">(42.701.234)</span></span>
+                <span class="value"><span class="cyan" id="testedDisplay">0</span> <span class="gray" id="testedRaw">(0)</span></span>
             </div>
 
             <!-- TEMPO -->
             <div class="row">
                 <span class="label">TEMPO</span><span class="colon">:</span>
-                <span class="value" id="timeDisplay">01h 32m 18s</span>
+                <span class="value" id="timeDisplay">00h 00m 00s</span>
             </div>
 
             <hr class="sep" />
@@ -727,15 +722,15 @@
             </div>
             <div class="progress-wrap">
                 <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 3.6%;"></div>
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
                 </div>
-                <span class="progress-label" id="progressLabel">3.6124%</span>
+                <span class="progress-label" id="progressLabel">0.0000%</span>
             </div>
 
             <!-- ETA -->
             <div class="row">
                 <span class="label label-sm">ETA (varrer)</span><span class="colon">:</span>
-                <span class="value"><span class="green" id="etaDisplay">28 dias</span></span>
+                <span class="value"><span class="green" id="etaDisplay">—</span></span>
             </div>
 
             <hr class="sep" />
@@ -743,29 +738,29 @@
             <!-- WORKERS (dinâmico) -->
             <div class="row" style="margin-bottom:4px;">
                 <span class="label label-sm" style="color:#4a9eff;">WORKERS</span>
-                <span class="value"><span class="gray" id="workersStatus">8/8 ativos</span></span>
+                <span class="value"><span class="gray" id="workersStatus">0/0 ativos</span></span>
             </div>
             <div class="worker-list" id="workerList">
-                <!-- preenchido via JS -->
+                <span class="worker-more">Nenhum worker iniciado</span>
             </div>
 
             <hr class="sep sep-thin" />
 
             <!-- RODAPÉ -->
             <div class="footer">
-                <span class="cp"><i class="fas fa-save"></i> Checkpoint: <span id="checkpointPath">C:\Users\Qq\puzzle71_output</span></span>
+                <span class="cp"><i class="fas fa-save"></i> Checkpoint: <span id="checkpointPath">puzzle71_output</span></span>
                 <span class="verse"><i class="fas fa-cross"></i> O Senhor é o meu Pastor — Salmos 23:1</span>
             </div>
 
             <!-- HIT BOX -->
             <div class="hit-box" id="hitBox" style="display:none;">
-                <div class="hit-title"><i class="fas fa-bolt"></i> CHAVE ENCONTRADA</div>
+                <div class="hit-title"><i class="fas fa-bolt"></i> CHAVE ENCONTRADA (ALVO REAL)</div>
                 <div class="hit-row"><span class="hl">MATCH</span> <span class="hv-green" id="hitMatch">p2pkh/bech32</span></div>
                 <div class="hit-row"><span class="hl">CHAVE</span> <span class="hv" id="hitKey">0x1a2b3c4d5e6f...</span></div>
                 <div class="hit-row"><span class="hl">WIF</span> <span class="hv" id="hitWif">L5K...xyz</span></div>
-                <div class="hit-row"><span class="hl">P2PKH</span> <span class="hv-green" id="hitP2pkh">1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU</span></div>
-                <div class="hit-row"><span class="hl">BECH32</span> <span class="hv-green" id="hitBech32">bc1q...abcdef</span></div>
-                <div class="hit-row"><span class="hl">P2SH</span> <span class="hv-green" id="hitP2sh">3J...xyz</span></div>
+                <div class="hit-row"><span class="hl">P2PKH</span> <span class="hv-green" id="hitP2pkh">1...carregado</span></div>
+                <div class="hit-row"><span class="hl">BECH32</span> <span class="hv-green" id="hitBech32">bc1q...carregado</span></div>
+                <div class="hit-row"><span class="hl">P2SH</span> <span class="hv-green" id="hitP2sh">3...carregado</span></div>
             </div>
 
             <!-- BOTÕES -->
@@ -796,22 +791,40 @@
 
     <script>
         /**
-         * Puzzle #71 Scanner - Core v3.1
-         * Agora com suporte a carregar targets, workers e range
+         * Puzzle #71 Scanner - Core v3.3
+         * - Detecção REAL de núcleos (navigator.hardwareConcurrency)
+         * - Limite máximo de workers = núcleos detectados
+         * - Padrão inteligente: PC: cores-1 (até 8), Celular: no máximo 2
+         * - Parse REAL de targets (1..., 3..., bc1...)
+         * - Hits usam a lista carregada
+         * - Botão Iniciar só ativa se houver targets
          */
         const scanner = {
             running: false,
             paused: false,
-            progress: 3.6124,
-            tested: 42701234,
-            speed: 482391,
-            elapsed: 5538,
+            progress: 0,
+            tested: 0,
+            speed: 0,
+            elapsed: 0,
             workers: [],
             hits: [],
             totalKeyspace: 1180591620717411303424,
-            targetCount: 1,
+            targetCount: 0,
             workerCount: 8,
             rangeBits: 71,
+            maxCores: 1,
+            isMobile: false,
+
+            // ============================================================
+            // DADOS DOS TARGETS (CARREGADOS)
+            // ============================================================
+            targetAddresses: {
+                p2pkh: [],   // começa com 1
+                bech32: [],  // começa com bc1
+                p2sh: [],    // começa com 3
+                ignored: 0
+            },
+            allTargets: [],  // lista plana para escolher hit aleatório
 
             // ============================================================
             // INICIALIZAÇÃO
@@ -822,19 +835,46 @@
                 this.createWorkers();
                 this.updateUI();
                 setInterval(() => this.updateUI(), 1000);
-                console.log('🔍 Puzzle #71 Scanner v3.1 carregado!');
+                console.log('🔍 Puzzle #71 Scanner v3.3 carregado!');
             },
 
             // ============================================================
-            // DETECTAR CPU
+            // DETECTA NÚCLEOS REAIS (NUNCA SIMULA MAIS QUE O HARDWARE)
             // ============================================================
             detectCPU() {
-                const cores = navigator.hardwareConcurrency || 4;
+                this.isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const cores = navigator.hardwareConcurrency || 1;
+                this.maxCores = cores;
+                
+                // Mostra no painel
                 document.getElementById('cpuCount').textContent = cores;
-                if (parseInt(document.getElementById('workersInput').value) > cores) {
-                    document.getElementById('workersInput').value = Math.min(cores, 16);
+                
+                // Define padrão inteligente
+                let defaultWorkers;
+                if (this.isMobile) {
+                    // Celular: máximo 2 workers (evita overheating e drena bateria)
+                    defaultWorkers = Math.min(cores, 2);
+                } else {
+                    // PC: usar cores - 1, no mínimo 1 e no máximo 8
+                    defaultWorkers = Math.max(1, Math.min(cores - 1, 8));
                 }
-                this.workerCount = parseInt(document.getElementById('workersInput').value);
+                
+                // Aplica ao input
+                const wInput = document.getElementById('workersInput');
+                wInput.value = defaultWorkers;
+                wInput.max = cores;   // LIMITE MÁXIMO = NÚCLEOS REAIS
+                wInput.min = 1;
+                wInput.step = 1;
+                
+                // Mostra recomendação
+                const recSpan = document.getElementById('workerRecommendation');
+                recSpan.textContent = `recomendado: ${defaultWorkers} (${this.isMobile ? 'celular' : 'pc'})`;
+                
+                // Atualiza estado
+                this.workerCount = defaultWorkers;
+                document.getElementById('workerCountDisplay').textContent = defaultWorkers;
+                
+                console.log(`🧠 Detectados ${cores} núcleos. Workers padrão: ${defaultWorkers} (Mobile: ${this.isMobile})`);
             },
 
             // ============================================================
@@ -848,14 +888,7 @@
                     const reader = new FileReader();
                     reader.onload = (ev) => {
                         const content = ev.target.result;
-                        // Conta linhas não vazias que parecem endereços
-                        const lines = content.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
-                        const valid = lines.filter(l => /^[13]/.test(l.trim()) || /^bc1/.test(l.trim()));
-                        this.targetCount = valid.length || 1;
-                        document.getElementById('targetsStatus').textContent = `${this.targetCount} alvos carregados`;
-                        document.getElementById('alvosCount').textContent = this.targetCount;
-                        document.getElementById('alvosType').textContent = '(set)';
-                        console.log(`📂 Carregados ${this.targetCount} alvos`);
+                        this.parseTargets(content);
                     };
                     reader.readAsText(file);
                 });
@@ -878,11 +911,14 @@
                     this.updateRange(e.target.value);
                 });
 
-                // Workers
+                // Workers — limite dinâmico
                 document.getElementById('workersInput').addEventListener('input', (e) => {
                     let v = parseInt(e.target.value) || 1;
-                    const max = navigator.hardwareConcurrency || 16;
-                    if (v > max) v = max;
+                    // Respeita o limite máximo real
+                    if (v > this.maxCores) {
+                        v = this.maxCores;
+                        e.target.value = v;
+                    }
                     if (v < 1) v = 1;
                     this.workerCount = v;
                     document.getElementById('workerCountDisplay').textContent = v;
@@ -890,11 +926,58 @@
                     this.updateUI();
                 });
 
-                // Uncompressed
                 document.getElementById('uncompressedCheck').addEventListener('change', () => {
-                    // apenas para feedback visual
                     console.log('Uncompressed:', document.getElementById('uncompressedCheck').checked);
                 });
+            },
+
+            // ============================================================
+            // PARSE DE TARGETS (CORRETO!)
+            // ============================================================
+            parseTargets(content) {
+                const lines = content.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+                
+                this.targetAddresses = { p2pkh: [], bech32: [], p2sh: [], ignored: 0 };
+                
+                for (const line of lines) {
+                    if (line.startsWith('1')) {
+                        this.targetAddresses.p2pkh.push(line);
+                    } else if (line.startsWith('bc1') || line.startsWith('BC1')) {
+                        this.targetAddresses.bech32.push(line);
+                    } else if (line.startsWith('3')) {
+                        this.targetAddresses.p2sh.push(line);
+                    } else {
+                        this.targetAddresses.ignored++;
+                    }
+                }
+
+                this.allTargets = [
+                    ...this.targetAddresses.p2pkh,
+                    ...this.targetAddresses.bech32,
+                    ...this.targetAddresses.p2sh
+                ];
+                this.targetCount = this.allTargets.length;
+
+                // Atualiza UI
+                document.getElementById('targetsStatus').textContent = `${this.targetCount} alvos carregados`;
+                document.getElementById('alvosCount').textContent = this.targetCount;
+                document.getElementById('alvosType').textContent = '(set)';
+                document.getElementById('targetsLoadedBadge').textContent = `${this.targetCount} alvos carregados`;
+
+                // Breakdown
+                if (this.targetCount > 0) {
+                    document.getElementById('formatBreakdown').style.display = 'block';
+                }
+                document.getElementById('cntP2pkh').textContent = this.targetAddresses.p2pkh.length;
+                document.getElementById('cntBech32').textContent = this.targetAddresses.bech32.length;
+                document.getElementById('cntP2sh').textContent = this.targetAddresses.p2sh.length;
+                document.getElementById('cntIgnored').textContent = this.targetAddresses.ignored;
+
+                // Habilita o botão Iniciar
+                document.getElementById('btnStart').disabled = false;
+
+                console.log(`📂 Carregados: ${this.targetCount} alvos (P2PKH: ${this.targetAddresses.p2pkh.length}, Bech32: ${this.targetAddresses.bech32.length}, P2SH: ${this.targetAddresses.p2sh.length})`);
+                this.updateUI();
             },
 
             // ============================================================
@@ -924,12 +1007,8 @@
                 if (min !== undefined && max !== undefined) {
                     this.rangeBits = bits;
                     this.totalKeyspace = Number(max - min + BigInt(1));
-                    if (this.totalKeyspace > 1e15) {
-                        // para números grandes, manter como BigInt internamente
-                    }
                     document.getElementById('rangeDisplay').textContent = display;
                     document.getElementById('keyspaceDisplay').textContent = this.human(this.totalKeyspace);
-                    // Reset progresso
                     this.progress = 0;
                     this.tested = 0;
                     this.updateUI();
@@ -941,7 +1020,7 @@
             // ============================================================
             createWorkers() {
                 this.workers = [];
-                const n = this.workerCount;
+                const n = Math.min(this.workerCount, this.maxCores); // nunca excede
                 for (let i = 0; i < n; i++) {
                     this.workers.push({
                         id: i,
@@ -959,6 +1038,10 @@
                 if (!container) return;
                 const maxShow = 8;
                 const show = this.workers.slice(0, maxShow);
+                if (show.length === 0) {
+                    container.innerHTML = `<span class="worker-more">Nenhum worker iniciado</span>`;
+                    return;
+                }
                 let html = show.map(w =>
                     `<span class="worker-item">
                         <span class="wid">▸ w${w.id}</span> 
@@ -975,13 +1058,17 @@
             // CONTROLE
             // ============================================================
             start() {
+                if (this.targetCount === 0) {
+                    alert('⚠️ Carregue um arquivo targets.txt primeiro!');
+                    return;
+                }
                 if (this.running) return;
                 this.running = true;
                 this.paused = false;
                 document.getElementById('btnStart').disabled = true;
                 document.getElementById('btnPause').disabled = false;
                 document.getElementById('statusDot').style.background = '#34d399';
-                console.log('▶️ Scanner iniciado');
+                console.log('▶️ Scanner iniciado com', this.targetCount, 'alvos');
                 this.simulate();
             },
 
@@ -1014,7 +1101,7 @@
             },
 
             // ============================================================
-            // SIMULAÇÃO
+            // SIMULAÇÃO COM USO REAL DOS TARGETS
             // ============================================================
             simulate() {
                 if (!this.running || this.paused) return;
@@ -1032,35 +1119,51 @@
                     this.workers.forEach(w => {
                         w.pos = `0x${Math.floor(Math.random() * 0xFFFFFFFFFFFFFFFF).toString(16).padStart(16, '0')}...`;
                     });
-                    if (Math.random() < 0.00005 && this.tested > 1000000) {
-                        this.foundHit();
+                    
+                    // ============================================================
+                    // HIT REALISTICO — ESCOLHE UM ALVO DA LISTA CARREGADA
+                    // ============================================================
+                    if (Math.random() < 0.00005 && this.tested > 1000000 && this.allTargets.length > 0) {
+                        const targetAddr = this.allTargets[Math.floor(Math.random() * this.allTargets.length)];
+                        let matchType = 'p2pkh/bech32';
+                        let p2pkhDisplay = targetAddr;
+                        let bech32Display = '—';
+                        let p2shDisplay = '—';
+                        
+                        if (targetAddr.startsWith('bc1')) {
+                            matchType = 'bech32';
+                            bech32Display = targetAddr;
+                            p2pkhDisplay = '(conversão não exibida)';
+                        } else if (targetAddr.startsWith('3')) {
+                            matchType = 'p2sh';
+                            p2shDisplay = targetAddr;
+                            p2pkhDisplay = '(conversão não exibida)';
+                        } else {
+                            p2pkhDisplay = targetAddr;
+                        }
+
+                        const hit = {
+                            key: `0x${Math.floor(Math.random() * 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).toString(16).padStart(64, '0')}`,
+                            match: matchType,
+                            wif: `L${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+                            p2pkh: p2pkhDisplay,
+                            bech32: bech32Display,
+                            p2sh: p2shDisplay
+                        };
+                        this.hits.push(hit);
+                        document.getElementById('hitBox').style.display = 'block';
+                        document.getElementById('hitMatch').textContent = hit.match;
+                        document.getElementById('hitKey').textContent = hit.key;
+                        document.getElementById('hitWif').textContent = hit.wif;
+                        document.getElementById('hitP2pkh').textContent = hit.p2pkh;
+                        document.getElementById('hitBech32').textContent = hit.bech32;
+                        document.getElementById('hitP2sh').textContent = hit.p2sh;
+                        document.getElementById('hitBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        console.log('💥 HIT SIMULADO (ALVO REAL!)', hit);
                     }
+                    
                     this.updateUI();
                 }, 1000);
-            },
-
-            // ============================================================
-            // HIT
-            // ============================================================
-            foundHit() {
-                const hit = {
-                    key: `0x${Math.floor(Math.random() * 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF).toString(16).padStart(64, '0')}`,
-                    match: ['p2pkh/bech32', 'p2sh', 'uncompressed'][Math.floor(Math.random() * 3)],
-                    wif: `L${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
-                    p2pkh: `1${Math.random().toString(36).substring(2, 10)}...`,
-                    bech32: `bc1q${Math.random().toString(36).substring(2, 10)}...`,
-                    p2sh: `3${Math.random().toString(36).substring(2, 10)}...`
-                };
-                this.hits.push(hit);
-                document.getElementById('hitBox').style.display = 'block';
-                document.getElementById('hitMatch').textContent = hit.match;
-                document.getElementById('hitKey').textContent = hit.key;
-                document.getElementById('hitWif').textContent = hit.wif;
-                document.getElementById('hitP2pkh').textContent = hit.p2pkh;
-                document.getElementById('hitBech32').textContent = hit.bech32;
-                document.getElementById('hitP2sh').textContent = hit.p2sh;
-                document.getElementById('hitBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                console.log('💥 CHAVE ENCONTRADA!', hit);
             },
 
             // ============================================================
