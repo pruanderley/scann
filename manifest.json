@@ -1,8 +1,8 @@
 {
   "name": "Puzzle #71 Scanner",
   "short_name": "PuzzleScanner",
-  "description": "Bitcoin private key scanner for Puzzle #71 – secp256k1 real no navegador",
-  "start_url": "/",
+  "description": "Bitcoin private key scanner for Puzzle #71",
+  "start_url": "/puzzle71-scanner/",
   "display": "standalone",
   "background_color": "#060c18",
   "theme_color": "#060c18",
