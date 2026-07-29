@@ -1,40 +1,63 @@
-const CACHE_NAME = 'Scann';
+// PUZZLE #71 SCANNER — Service Worker v4.0
+// Comandante: Pr Uanderley | Soldado: Uenderley
+
+const CACHE_NAME = 'p71-scanner-v4';
 const ASSETS = [
+  './',
   './index.html',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
-  './icon-512-maskable.png'
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/webfonts/fa-solid-900.woff2',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/webfonts/fa-brands-400.woff2',
 ];
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+// Instalação — pré-cache dos assets
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+// Ativação — limpa caches antigos
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+      )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Cache-first só para os arquivos do próprio app (casca do PWA).
-// Chamadas para Scann (localhost) e Scann,
-// nunca passam pelo cache — são caça em tempo real, não fazem sentido offline.
-self.addEventListener('fetch', (event) => {
-  const url = event.request.url;
-  const isAppShell = ASSETS.some((asset) => url.endsWith(asset.replace('./', '')));
+// Fetch — cache first, network fallback
+self.addEventListener('fetch', e => {
+  // Ignora requests não GET
+  if (e.request.method !== 'GET') return;
 
-  if (!isAppShell) return; // deixa passar direto pra rede
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if (cached) return cached;
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request);
+      return fetch(e.request)
+        .then(response => {
+          // Só cacheia respostas válidas
+          if (!response || response.status !== 200 || response.type === 'error') {
+            return response;
+          }
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+          return response;
+        })
+        .catch(() => {
+          // Offline fallback para navegação
+          if (e.request.destination === 'document') {
+            return caches.match('./index.html');
+          }
+        });
     })
   );
 });
