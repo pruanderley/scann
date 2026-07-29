@@ -1,44 +1,40 @@
-const CACHE_NAME = 'puzzle-scanner-v4-cache';
-const urlsToCache = [
-  './',
+const CACHE_NAME = 'Scann';
+const ASSETS = [
   './index.html',
   './manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
+  './icon-192.png',
+  './icon-512.png',
+  './icon-512-maskable.png'
 ];
 
-// Instalação do Service Worker e cache dos arquivos estáticos
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
+  self.skipWaiting();
 });
 
-// Intercepta as requisições para servir do cache caso esteja offline
-self.addEventListener('fetch', event => {
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+// Cache-first só para os arquivos do próprio app (casca do PWA).
+// Chamadas para Scann (localhost) e Scann,
+// nunca passam pelo cache — são caça em tempo real, não fazem sentido offline.
+self.addEventListener('fetch', (event) => {
+  const url = event.request.url;
+  const isAppShell = ASSETS.some((asset) => url.endsWith(asset.replace('./', '')));
+
+  if (!isAppShell) return; // deixa passar direto pra rede
+
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Retorna o arquivo em cache, se existir, senão faz a requisição na rede
-        return response || fetch(event.request);
-      })
-  );
-});
-
-// Limpa caches antigos quando o Service Worker é atualizado
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
+    caches.match(event.request).then((cached) => {
+      return cached || fetch(event.request);
     })
   );
 });
