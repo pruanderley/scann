@@ -1,0 +1,13 @@
+{
+  "name": "puzzle-scanner",
+  "version": "4.0.0",
+  "description": "Secp256k1 scanner",
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  },
+  "scripts": {
+    "build": "npx cap sync android"
+  }
+}
