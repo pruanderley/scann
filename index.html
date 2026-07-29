@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0a0e17" />
+    <meta name="description" content="PUZZLE #71 SCANNER - secp256k1 Bitcoin Private Key Scanner" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <title>PUZZLE #71 SCANNER — v3.1</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+
+    <!-- Fontes e ícones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+    <div class="terminal" role="main">
+        <!-- BARRA SUPERIOR -->
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+            </div>
+            <div class="terminal-title">
+                <i class="fas fa-terminal"></i> PUZZLE #71 SCANNER — v3.1
+            </div>
+            <div style="flex:1; text-align:right; color:#2a4a6a; font-size:11px; font-family:'JetBrains Mono',monospace;">
+                <i class="fas fa-microchip"></i> <span id="workerCount">8</span> workers
+                <span id="statusDot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;margin-left:8px;"></span>
+            </div>
+        </div>
+
+        <!-- PAINEL PRINCIPAL -->
+        <div class="panel" id="panel">
+
+            <!-- BANNER (ASCII) -->
+            <div class="banner" aria-label="Puzzle 71 Scanner Banner">
+                <div class="line0">██████╗ ██╗   ██╗███████╗███████╗██╗     ███████╗</div>
+                <div class="line1">██╔══██╗██║   ██║╚══███╔╝╚══███╔╝██║     ██╔════╝</div>
+                <div class="line2">██████╔╝██║   ██║  ███╔╝   ███╔╝ ██║     █████╗</div>
+                <div class="line3">██╔═══╝ ██║   ██║ ███╔╝   ███╔╝  ██║     ██╔══╝</div>
+                <div class="line4">██║     ╚██████╔╝███████╗███████╗███████╗███████╗</div>
+                <div class="line5">╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝╚══════╝</div>
+            </div>
+            <div class="banner-sub">
+                <span>S C A N N E R</span> &middot; secp256k1 &middot; v3.1
+            </div>
+
+            <hr class="sep" />
+
+            <!-- ALVOS -->
+            <div class="row">
+                <span class="label">ALVOS</span><span class="colon">:</span>
+                <span class="value"><span class="highlight" id="alvosCount">1</span> <span class="gray">(set)</span></span>
+            </div>
+
+            <!-- FORMATOS -->
+            <div class="row">
+                <span class="label">FORMATOS</span><span class="colon">:</span>
+                <span class="value">P2PKH/Bech32 <span class="badge">1 hash/chave</span></span>
+            </div>
+
+            <!-- RANGE -->
+            <div class="row">
+                <span class="label">RANGE</span><span class="colon">:</span>
+                <span class="value"><span class="highlight" id="rangeDisplay">71 bits  [2^70, 2^71)</span></span>
+            </div>
+
+            <!-- KEYSPACE -->
+            <div class="row">
+                <span class="label">KEYSPACE</span><span class="colon">:</span>
+                <span class="value"><span class="green" id="keyspaceDisplay">1.18 T</span> <span class="gray">chaves</span></span>
+            </div>
+
+            <hr class="sep" />
+
+            <!-- VELOCIDADE -->
+            <div class="row">
+                <span class="label">VELOCIDADE</span><span class="colon">:</span>
+                <span class="value"><span class="green" id="speedDisplay"><strong>482.391</strong></span> <span class="gray">chaves/s</span></span>
+            </div>
+
+            <!-- HISTÓRICO (sparkline) -->
+            <div class="row">
+                <span class="label">HISTÓRICO</span><span class="colon">:</span>
+                <span class="value"><span class="spark" id="sparkDisplay">▁▂▃▄▅▆▇██▇▆▅▄▃▂▁</span></span>
+            </div>
+
+            <!-- TESTADAS -->
+            <div class="row">
+                <span class="label">TESTADAS</span><span class="colon">:</span>
+                <span class="value"><span class="cyan" id="testedDisplay">42.7 M</span> <span class="gray" id="testedRaw">(42.701.234)</span></span>
+            </div>
+
+            <!-- TEMPO -->
+            <div class="row">
+                <span class="label">TEMPO</span><span class="colon">:</span>
+                <span class="value" id="timeDisplay">01h 32m 18s</span>
+            </div>
+
+            <hr class="sep" />
+
+            <!-- PROGRESSO -->
+            <div class="row" style="margin-top:2px;">
+                <span class="label label-sm" style="color:#4a9eff;">PROGRESSO</span>
+            </div>
+            <div class="progress-wrap">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 3.6%;"></div>
+                </div>
+                <span class="progress-label" id="progressLabel">3.6124%</span>
+            </div>
+
+            <!-- ETA -->
+            <div class="row">
+                <span class="label label-sm">ETA (varrer)</span><span class="colon">:</span>
+                <span class="value"><span class="green" id="etaDisplay">28 dias</span></span>
+            </div>
+
+            <hr class="sep" />
+
+            <!-- WORKERS -->
+            <div class="row" style="margin-bottom:4px;">
+                <span class="label label-sm" style="color:#4a9eff;">WORKERS</span>
+                <span class="value"><span class="gray" id="workersStatus">8/8 ativos</span></span>
+            </div>
+            <div class="worker-list" id="workerList">
+                <!-- Workers serão inseridos via JS -->
+            </div>
+
+            <hr class="sep sep-thin" />
+
+            <!-- RODAPÉ -->
+            <div class="footer">
+                <span class="cp"><i class="fas fa-save"></i> Checkpoint: <span id="checkpointPath">C:\Users\Qq\puzzle71_output</span></span>
+                <span class="verse"><i class="fas fa-cross"></i> O Senhor é o meu Pastor — Salmos 23:1</span>
+            </div>
+
+            <!-- HIT BOX (oculto) -->
+            <div class="hit-box" id="hitBox" style="display:none;">
+                <div class="hit-title"><i class="fas fa-bolt"></i> CHAVE ENCONTRADA</div>
+                <div class="hit-row"><span class="hl">MATCH</span> <span class="hv-green" id="hitMatch">p2pkh/bech32</span></div>
+                <div class="hit-row"><span class="hl">CHAVE</span> <span class="hv" id="hitKey">0x1a2b3c4d5e6f...</span></div>
+                <div class="hit-row"><span class="hl">WIF</span> <span class="hv" id="hitWif">L5K...xyz</span></div>
+                <div class="hit-row"><span class="hl">P2PKH</span> <span class="hv-green" id="hitP2pkh">1PWo3JeB9jrGwfHDNpdGK54CRas7fsVzXU</span></div>
+                <div class="hit-row"><span class="hl">BECH32</span> <span class="hv-green" id="hitBech32">bc1q...abcdef</span></div>
+                <div class="hit-row"><span class="hl">P2SH</span> <span class="hv-green" id="hitP2sh">3J...xyz</span></div>
+            </div>
+
+            <!-- Botões de controle -->
+            <div style="margin-top:16px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                <button id="btnStart" class="btn btn-primary" onclick="scanner.start()">
+                    <i class="fas fa-play"></i> Iniciar
+                </button>
+                <button id="btnPause" class="btn btn-secondary" onclick="scanner.pause()" disabled>
+                    <i class="fas fa-pause"></i> Pausar
+                </button>
+                <button id="btnReset" class="btn btn-danger" onclick="scanner.reset()">
+                    <i class="fas fa-redo"></i> Reiniciar
+                </button>
+            </div>
+
+            <!-- rodapé extra -->
+            <div style="margin-top:12px; text-align:center; font-size:11px; color:#2a4a6a; border-top:1px solid #0f1a2e; padding-top:10px;">
+                <i class="fas fa-keyboard"></i> Ctrl+C para parar &nbsp;&middot;&nbsp; <i class="fas fa-code"></i> secp256k1
+            </div>
+
+        </div>
+        <!-- /panel -->
+    </div>
+    <!-- /terminal -->
+
+    <!-- Scripts -->
+    <script src="js/scanner.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Service Worker Register -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registrado!', reg))
+                .catch(err => console.log('SW falhou:', err));
+        }
+    </script>
+
+</body>
+</html>
