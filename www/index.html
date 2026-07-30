@@ -630,14 +630,20 @@ const App = {
       document.getElementById('etaD').textContent = etaStr;
     }
 
-    // workers
+    // workers — 1 linha: ▸ w0  0x58000...  + 7
     const wk = Object.entries(this.wkData);
     const active = wk.filter(([,w]) => w.active).length;
     document.getElementById('wkStat').textContent = `${active}/${wk.length} ativos`;
-    const shown = wk.slice(0, 8);
-    document.getElementById('wkList').innerHTML = shown.length ? shown.map(([id, w]) =>
-      `<span class="wi"><span class="wid">▸ w${id}</span> <span class="wpos">${w.pos}</span></span>`
-    ).join('') + (wk.length > 8 ? `<span class="gy" style="font-size:11px">+${wk.length - 8} mais</span>` : '') : '<span class="gy" style="font-size:11px">Nenhum worker iniciado</span>';
+    if (wk.length > 0) {
+      const [id, w] = wk[0];
+      const rest = wk.length - 1;
+      const plus = rest > 0 ? `  <span class="gy">+ ${rest}</span>` : '';
+      document.getElementById('wkList').innerHTML =
+        `<span class="wi"><span class="wid">▸ w${id}</span>  <span class="wpos">${w.pos}</span>${plus}</span>`;
+    } else {
+      document.getElementById('wkList').innerHTML =
+        '<span class="gy" style="font-size:11px">Nenhum worker iniciado</span>';
+    }
   },
 
   pause() {
