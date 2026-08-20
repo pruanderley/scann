@@ -4,6 +4,10 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="theme-color" content="#F0F6FC"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Scanner #71"/>
+<link id="pwaManifest" rel="manifest"/>
 <title>Puzzle #71 Scanner</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -169,6 +173,14 @@ body {
             <h1>Puzzle #71</h1>
             <span>Scanner secp256k1</span>
         </div>
+
+    <!-- Wake Lock Badge -->
+    <div style="text-align:right;margin-top:4px;">
+        <span id="wlBadge" style="font-size:10px;color:#94A3B8;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:10px;padding:2px 8px;display:inline-flex;align-items:center;gap:4px;">
+            <span id="wlDot" style="width:5px;height:5px;border-radius:50%;background:#CBD5E1;display:inline-block;"></span>
+            <span id="wlText">tela livre</span>
+        </span>
+    </div>
     </div>
 
     <!-- Configurações -->
@@ -521,6 +533,7 @@ P2SH  : ${d.p2sh}`;
 
   stop() {
     this.running = false; clearInterval(this.ticker);
+    releaseWL();
     this.workers.forEach(w => w.terminate()); this.workers = [];
     document.getElementById('btnStart').disabled = false;
     document.getElementById('btnStop').disabled = true;
@@ -539,6 +552,39 @@ P2SH  : ${d.p2sh}`;
     document.getElementById('checkedD').textContent = '0';
   }
 };
+
+
+// ── WAKE LOCK — mantém tela ativa no Android ──────────────────
+let _wl = null;
+async function acquireWL(){
+  if(!('wakeLock' in navigator)) return;
+  try{
+    _wl = await navigator.wakeLock.request('screen');
+    document.getElementById('wlDot').style.background='#007AFF';
+    document.getElementById('wlText').textContent='tela ativa';
+    _wl.addEventListener('release',()=>{
+      document.getElementById('wlDot').style.background='#CBD5E1';
+      document.getElementById('wlText').textContent='tela livre';
+      _wl=null;
+    });
+  }catch(e){}
+}
+function releaseWL(){ if(_wl){_wl.release();_wl=null;} }
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&App.running&&!_wl) acquireWL();
+});
+
+// ── PWA MANIFEST embutido ─────────────────────────────────────
+(function(){
+  const m={name:"Puzzle #71 Scanner",short_name:"Scanner #71",
+    start_url:".",display:"standalone",
+    background_color:"#E9F2FA",theme_color:"#007AFF",
+    orientation:"portrait-primary",
+    icons:[{src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",sizes:"192x192",type:"image/png"}]};
+  const b=new Blob([JSON.stringify(m)],{type:'application/json'});
+  const el=document.getElementById('pwaManifest');
+  if(el) el.href=URL.createObjectURL(b);
+})();
 
 document.addEventListener('DOMContentLoaded', () => App.init());
 </script>
