@@ -2,374 +2,238 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="theme-color" content="#F8F9FA"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Puzzle #71 Scanner</title>
-<!-- Fonte moderna -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* Reset e Configurações Globais */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 body {
-    background-color: #F1F3F6;
+    background-color: #F2F4F8;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
     min-height: 100vh;
-    padding: 24px 16px;
+    padding: 12px;
     color: #1E293B;
 }
-
-/* Container Principal (estilo App Mobile) */
 .app-container {
-    max-width: 480px;
+    max-width: 420px;
     width: 100%;
-    margin: 0 auto;
 }
 
-/* Header */
+/* Header Compacto */
 .app-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 12px;
 }
-.app-header .icon {
-    background: #B45309; /* Laranja escuro */
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
+.icon {
+    background: #B45309;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 24px;
-    font-weight: bold;
-}
-.app-header h1 {
     font-size: 20px;
-    font-weight: 700;
-    color: #0F172A;
+    font-weight: bold;
+    flex-shrink: 0;
 }
-.app-header .sub {
-    font-size: 13px;
-    color: #64748B;
-    font-weight: 400;
-}
+.header-text h1 { font-size: 18px; font-weight: 700; line-height: 1.2; }
+.header-text span { font-size: 12px; color: #64748B; display: block; }
 
-/* Cartões (Cards) */
+/* Cartões Compactos */
 .card {
     background: #FFFFFF;
-    border-radius: 20px;
-    padding: 20px 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    border: 1px solid #E2E8F0;
-}
-
-.card-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #64748B;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 /* Inputs e Selects */
-.input-group {
-    margin-bottom: 0px;
-}
-select, input[type="text"], input[type="number"] {
+.input-group { margin-bottom: 6px; }
+.input-group label { font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 3px; }
+.input-group select, .input-group input {
     width: 100%;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 1px solid #CBD5E1;
-    background: #F8FAFC;
-    font-size: 15px;
-    color: #0F172A;
-    outline: none;
-    transition: border-color 0.2s;
-}
-select:focus, input:focus {
-    border-color: #B45309;
-    background: #fff;
-}
-.file-input-wrapper {
-    position: relative;
-}
-.file-input-wrapper input[type="file"] {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-.file-label {
-    display: inline-block;
-    padding: 10px 16px;
-    background: #F1F5F9;
+    padding: 8px 10px;
     border-radius: 8px;
-    color: #475569;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
     font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px dashed #94A3B8;
-    width: 100%;
-    text-align: center;
+    outline: none;
 }
-.file-label:hover { background: #E2E8F0; }
+.input-group input:focus { border-color: #B45309; background: #fff; }
 
-/* Linha de Botões */
-.actions {
+/* Botão de Arquivo */
+.file-wrapper { position: relative; display: inline-block; width: 100%; }
+.file-wrapper input[type="file"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+.file-label {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 8px; background: #F1F5F9; border-radius: 8px; color: #475569;
+    font-size: 13px; font-weight: 500; border: 1px dashed #CBD5E1; width: 100%;
+}
+
+/* Grid de Configuração (2 colunas no topo) */
+.config-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 8px;
+    gap: 10px;
 }
-.btn {
-    padding: 14px 0;
-    border: none;
-    border-radius: 14px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-}
-.btn-primary {
-    background: #B45309; /* Laranja escuro igual da foto */
-    color: #fff;
-}
-.btn-primary:hover:not(:disabled) { background: #92400E; }
-.btn-primary:disabled { background: #CBD5E1; color: #94A3B8; cursor: not-allowed; }
-.btn-secondary {
-    background: #F1F5F9;
-    color: #475569;
-}
-.btn-secondary:hover:not(:disabled) { background: #E2E8F0; }
-.btn-danger {
-    background: #FEE2E2;
-    color: #B91C1C;
-}
-.btn-danger:hover { background: #FECACA; }
 
-/* Área de Status (Live Activity) */
-.status-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+/* Botões de Ação */
+.actions { display: flex; gap: 10px; margin-bottom: 12px; }
+.btn {
+    flex: 1; padding: 10px 0; border: none; border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer; text-align: center;
 }
-.status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    font-size: 16px;
-}
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-}
+.btn-primary { background: #B45309; color: #fff; }
+.btn-primary:disabled { background: #CBD5E1; color: #94A3B8; }
+.btn-secondary { background: #F1F5F9; color: #475569; }
+.btn-danger { background: #FEE2E2; color: #B91C1C; font-size: 13px; padding: 8px 0; }
+
+/* Painel de Status (Dashboard) */
+.status-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.status-left { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .dot.idle { background: #94A3B8; }
-.dot.running { background: #22C55E; animation: pulse 1.5s infinite; }
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-.status-label { color: #64748B; font-size: 12px; font-weight: 500; letter-spacing: 0.5px; }
+.dot.running { background: #22C55E; animation: pulse 1.2s infinite; }
+@keyframes pulse { 0%{opacity:1} 50%{opacity:0.3} 100%{opacity:1} }
+.status-label { color: #94A3B8; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
 
 /* Barra de Progresso */
-.progress-container {
-    width: 100%;
-    height: 4px;
-    background: #E2E8F0;
-    border-radius: 4px;
-    margin: 12px 0 20px 0;
-    overflow: hidden;
-}
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    background: #B45309;
-    transition: width 0.4s ease;
-    border-radius: 4px;
-}
+.progress-container { width: 100%; height: 3px; background: #E2E8F0; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: #B45309; transition: width 0.3s ease; }
 
-/* Key Box */
+/* Key Box (Apenas texto) */
 .key-box {
-    background: #FEFCE8; /* Amarelo clarinho */
-    border: 1px solid #E2E8F0;
-    border-radius: 12px;
-    padding: 16px;
-    font-family: 'Inter', monospace;
-    font-size: 13px;
-    color: #3F3F46;
-    word-break: break-all;
-    margin-bottom: 20px;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
+    background: #FEFCE8; border: 1px solid #E2E8F0; border-radius: 8px;
+    padding: 8px 10px; font-size: 12px; font-family: monospace;
+    color: #3F3F46; word-break: break-all; margin-bottom: 10px;
+    min-height: 30px; display: flex; align-items: center;
 }
 
-/* Métricas (Grid) */
-.metrics {
+/* Grid de Métricas (4 itens lado a lado - Compacto) */
+.metrics-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding-top: 12px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 4px;
+    padding-top: 8px;
     border-top: 1px solid #E2E8F0;
 }
-.metric-item {
-    display: flex;
-    flex-direction: column;
-}
-.metric-value {
-    font-size: 24px;
-    font-weight: 700;
-    color: #B45309;
-}
-.metric-value.neutral { color: #0F172A; }
-.metric-label {
-    font-size: 12px;
-    color: #64748B;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 2px;
-}
+.metric-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.metric-value { font-size: 16px; font-weight: 700; color: #0F172A; }
+.metric-value.orange { color: #B45309; }
+.metric-label { font-size: 10px; color: #64748B; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 3px; }
 
-/* Resultados (Hit) */
-.hit-box {
-    background: #F0FDF4;
-    border: 2px solid #22C55E;
-    border-radius: 16px;
-    padding: 16px;
-    margin-top: 12px;
-    display: none;
-}
-.hit-box h3 { color: #15803D; margin-bottom: 8px; font-size: 16px; }
-.hit-box pre {
-    background: #fff;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    white-space: pre-wrap;
-    word-break: break-all;
-    border: 1px solid #DCFCE7;
-}
+/* Hit Box */
+.hit-box { background: #F0FDF4; border: 2px solid #22C55E; border-radius: 12px; padding: 10px; margin-top: 8px; display: none; }
+.hit-box h4 { color: #15803D; font-size: 14px; margin-bottom: 4px; }
+.hit-box pre { background: #fff; padding: 8px; border-radius: 6px; font-size: 11px; white-space: pre-wrap; word-break: break-all; border: 1px solid #DCFCE7; }
 
-/* Responsividade */
-@media (max-width: 420px) {
-    .metrics { grid-template-columns: 1fr 1fr; }
-    .app-header h1 { font-size: 18px; }
+/* Responsividade para telas muito pequenas */
+@media (max-width: 380px) {
+    .metrics-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .metric-item { align-items: flex-start; text-align: left; }
 }
 </style>
 </head>
 <body>
-
 <div class="app-container">
 
     <!-- Header -->
     <div class="app-header">
         <div class="icon">₿</div>
-        <div>
-            <h1>Bitcoin Puzzle #71</h1>
-            <div class="sub">Scanner secp256k1 v4.0</div>
+        <div class="header-text">
+            <h1>Puzzle #71</h1>
+            <span>Scanner secp256k1</span>
         </div>
     </div>
 
-    <!-- Configurações -->
+    <!-- Configurações (Compactas em Grid) -->
     <div class="card">
-        <div class="card-title">⚙️ Configuração</div>
-        
-        <div style="display:grid; gap:12px;">
+        <div class="config-grid">
             <div class="input-group">
-                <label style="font-size:13px; font-weight:600; color:#475569; margin-bottom:4px; display:block;">Alvo (Targets)</label>
-                <div class="file-input-wrapper">
+                <label>Alvo</label>
+                <div class="file-wrapper">
                     <input type="file" id="fileIn" accept=".txt"/>
-                    <div class="file-label" id="fileStatus">📂 Carregar targets.txt</div>
+                    <div class="file-label" id="fileStatus">📂 Carregar</div>
                 </div>
             </div>
-
             <div class="input-group">
-                <label style="font-size:13px; font-weight:600; color:#475569; margin-bottom:4px; display:block;">Range (bits)</label>
-                <input type="text" id="rangeIn" value="71" placeholder="Ex: 71 ou 30-71"/>
+                <label>Range</label>
+                <input type="text" id="rangeIn" value="71" style="text-align:center;"/>
             </div>
-            
+        </div>
+        <div class="config-grid" style="margin-top:6px;">
             <div class="input-group">
-                <label style="font-size:13px; font-weight:600; color:#475569; margin-bottom:4px; display:block;">Workers (CPU Cores)</label>
-                <input type="number" id="wkIn" value="4" min="1" max="32"/>
+                <label>Workers</label>
+                <input type="number" id="wkIn" value="4" min="1" max="32" style="text-align:center;"/>
+            </div>
+            <div class="input-group" style="display:flex; align-items:flex-end; justify-content:flex-end;">
+                <!-- Espaço vazio para alinhamento -->
             </div>
         </div>
     </div>
 
-    <!-- Controles -->
+    <!-- Ações -->
     <div class="actions">
         <button class="btn btn-primary" id="btnStart" onclick="App.start()">▶ Iniciar</button>
         <button class="btn btn-secondary" id="btnStop" onclick="App.stop()" disabled>⏹ Parar</button>
     </div>
-    <div style="display:flex; justify-content:center; margin-top:8px;">
-        <button class="btn btn-danger" id="btnReset" onclick="App.reset()" style="width:100%;">⟳ Reiniciar Estatísticas</button>
-    </div>
+    <button class="btn btn-danger" id="btnReset" onclick="App.reset()" style="width:100%; margin-bottom:12px;">⟳ Reiniciar</button>
 
-    <!-- Status / Live Activity -->
-    <div class="card" style="margin-top:8px;">
+    <!-- Painel de Status -->
+    <div class="card">
         <div class="status-header">
-            <div class="status-indicator">
+            <div class="status-left">
                 <span class="dot idle" id="statusDot"></span>
                 <span id="statusText">Parado</span>
             </div>
-            <span class="status-label">LIVE ACTIVITY</span>
+            <span class="status-label">LIVE</span>
         </div>
-
         <div class="progress-container">
             <div class="progress-fill" id="pFill"></div>
         </div>
-
         <div class="key-box" id="keyDisplay">—</div>
 
-        <div class="metrics">
+        <!-- Métricas Compactas -->
+        <div class="metrics-grid">
             <div class="metric-item">
-                <span class="metric-value neutral" id="timeD">00:00:00</span>
+                <span class="metric-value" id="timeD">00:00</span>
                 <span class="metric-label">⏱ Tempo</span>
             </div>
             <div class="metric-item">
-                <span class="metric-value" id="speedD">0</span>
-                <span class="metric-label">⚡ Chaves / s</span>
+                <span class="metric-value orange" id="speedD">0</span>
+                <span class="metric-label">⚡ /s</span>
             </div>
             <div class="metric-item">
-                <span class="metric-value neutral" id="checkedD">0</span>
-                <span class="metric-label">🔑 Testadas</span>
+                <span class="metric-value" id="checkedD">0</span>
+                <span class="metric-label">🔑 Testes</span>
             </div>
             <div class="metric-item">
-                <span class="metric-value neutral" id="alvoD">0</span>
+                <span class="metric-value" id="alvoD">0</span>
                 <span class="metric-label">🎯 Alvos</span>
             </div>
         </div>
 
-        <!-- Hit Box (escondido por padrão) -->
+        <!-- Hit -->
         <div class="hit-box" id="hitBox">
-            <h3>🏆 CHAVE ENCONTRADA!</h3>
+            <h4>🏆 CHAVE ENCONTRADA!</h4>
             <pre id="hitContent"></pre>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div style="text-align:center; margin-top:16px; color:#94A3B8; font-size:12px;">
-        O Senhor é o meu Pastor — Salmos 23:1
+    <div style="text-align:center; color:#94A3B8; font-size:11px; margin-top:8px;">
+        O Senhor é o meu Pastor
     </div>
 </div>
 
 <script>
 // ═══════════════════════════════════════════════════════════════════
-// CRYPTO ENGINE (Mantido intacto do seu código original)
+// CRYPTO ENGINE (Mantido intacto)
 // ═══════════════════════════════════════════════════════════════════
 const CRYPTO_CODE = `
 'use strict';
@@ -408,7 +272,7 @@ function allAddrs(x,y){const kh=hash160(pubC(x,y));const rs=new Uint8Array(22);r
 `;
 
 // ═══════════════════════════════════════════════════════════════════
-// WORKER CODE (Mantido intacto do seu código original)
+// WORKER CODE
 // ═══════════════════════════════════════════════════════════════════
 const WORKER_CODE = CRYPTO_CODE + `
 function lookup(h20, buf, n){
@@ -485,15 +349,13 @@ self.onmessage=function(e){
 `;
 
 // ═══════════════════════════════════════════════════════════════════
-// MAIN APP (Interface Adaptada)
+// MAIN APP (Compacto)
 // ═══════════════════════════════════════════════════════════════════
 const App = {
-  workers: [], running: false, paused: false,
+  workers: [], running: false,
   tested: 0n, startTime: 0, elapsed: 0,
   speedHistory: [], speedLast: 0, testedLast: 0n, timeLast: 0,
-  targetBuf: null, needSH: false, needUnc: false,
-  targetCount: 0, rangeLo: 0n, rangeHi: 0n, ks: 0n,
-  wkData: {},
+  targetBuf: null, targetCount: 0, rangeLo: 0n, rangeHi: 0n, ks: 0n,
 
   init() {
     const cores = navigator.hardwareConcurrency || 4;
@@ -501,7 +363,6 @@ const App = {
     this.parseRange('71');
     document.getElementById('rangeIn').addEventListener('input', e => this.parseRange(e.target.value));
     document.getElementById('fileIn').addEventListener('change', e => this.loadFile(e));
-    document.getElementById('btnStart').disabled = false;
     this.updateUI();
   },
 
@@ -522,11 +383,10 @@ const App = {
 
   loadFile(e) {
     const file = e.target.files[0]; if (!file) return;
-    document.getElementById('fileStatus').textContent = 'Lendo...';
+    document.getElementById('fileStatus').textContent = '🔄';
     const reader = new FileReader();
     reader.onload = ev => {
       const lines = ev.target.result.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
-      // Decodifica endereços rapidamente no main thread
       const h160s = [];
       for (const addr of lines) {
         const h = this.addrToH160Main(addr);
@@ -537,8 +397,8 @@ const App = {
       h160s.forEach((h, i) => buf.set(h, i * 20));
       this.targetBuf = buf;
       this.targetCount = h160s.length;
-      document.getElementById('fileStatus').textContent = `${h160s.length.toLocaleString()} alvos carregados`;
-      document.getElementById('alvoD').textContent = h160s.length.toLocaleString();
+      document.getElementById('fileStatus').textContent = `📂 ${h160s.length}`;
+      document.getElementById('alvoD').textContent = h160s.length;
       document.getElementById('btnStart').disabled = false;
     };
     reader.readAsText(file);
@@ -572,15 +432,14 @@ const App = {
 
   start() {
     if (this.running) return;
-    this.running = true; this.paused = false;
+    this.running = true;
     this.tested = 0n; this.startTime = Date.now();
     this.elapsed = 0; this.speedHistory = [];
     this.testedLast = 0n; this.timeLast = Date.now();
-    this.wkData = {};
     document.getElementById('btnStart').disabled = true;
     document.getElementById('btnStop').disabled = false;
     document.getElementById('statusDot').className = 'dot running';
-    document.getElementById('statusText').textContent = 'Buscando...';
+    document.getElementById('statusText').textContent = 'Buscando';
     document.getElementById('keyDisplay').textContent = 'Iniciando...';
     document.getElementById('hitBox').style.display = 'none';
 
@@ -595,12 +454,11 @@ const App = {
       const be = i === nw - 1 ? hi : (bs + span - 1n);
       const w = new Worker(url);
       const targets = this.targetBuf ? this.targetBuf.buffer : null;
-      const msg = { wid: i, startHex: bs.toString(16), endHex: be.toString(16), targets, needSH: this.needSH, needUnc: this.needUnc, batchSize: 256 };
+      const msg = { wid: i, startHex: bs.toString(16), endHex: be.toString(16), targets, needSH: false, needUnc: false, batchSize: 256 };
       if (targets) w.postMessage(msg, [targets.slice(0)]);
       else w.postMessage(msg);
       w.onmessage = ev => this.onWorkerMsg(ev.data);
       this.workers.push(w);
-      this.wkData[i] = { pos: '0x' + bs.toString(16), active: true };
     }
     this.ticker = setInterval(() => this.tick(), 800);
   },
@@ -608,20 +466,14 @@ const App = {
   onWorkerMsg(d) {
     if (d.type === 'progress') {
       this.tested += BigInt(d.delta);
-      if (this.wkData[d.wid]) this.wkData[d.wid].pos = d.pos;
       document.getElementById('keyDisplay').textContent = d.pos;
     } else if (d.type === 'hit') {
       this.showHit(d);
       this.stop();
-    } else if (d.type === 'done') {
-      this.tested += BigInt(d.delta);
-      if (this.wkData[d.wid]) this.wkData[d.wid].active = false;
     }
   },
 
   showHit(d) {
-    console.log('%c💥 CHAVE ENCONTRADA!', 'color:lime;font-size:18px;font-weight:bold');
-    console.log('CHAVE :', d.key); console.log('WIF   :', d.wif);
     document.getElementById('hitContent').textContent = 
 `CHAVE : ${d.key}
 WIF   : ${d.wif}
@@ -645,11 +497,10 @@ P2SH  : ${d.p2sh}`;
   updateUI() {
     const t = Number(this.tested);
     const el = this.elapsed;
-    const h = String(Math.floor(el / 3600)).padStart(2, '0');
-    const m = String(Math.floor((el % 3600) / 60)).padStart(2, '0');
+    const m = String(Math.floor(el / 60)).padStart(2, '0');
     const s = String(Math.floor(el % 60)).padStart(2, '0');
-    document.getElementById('timeD').textContent = `${h}:${m}:${s}`;
-    document.getElementById('speedD').textContent = this.speedLast > 1000 ? (this.speedLast/1000).toFixed(1)+'K' : Math.floor(this.speedLast);
+    document.getElementById('timeD').textContent = `${m}:${s}`;
+    document.getElementById('speedD').textContent = this.speedLast > 1000 ? (this.speedLast/1000).toFixed(1)+'k' : Math.floor(this.speedLast);
     document.getElementById('checkedD').textContent = t.toLocaleString();
   },
 
@@ -664,10 +515,13 @@ P2SH  : ${d.p2sh}`;
 
   reset() {
     this.stop(); this.tested = 0n; this.elapsed = 0; this.speedHistory = [];
-    this.wkData = {}; this.speedLast = 0;
+    this.speedLast = 0;
     document.getElementById('hitBox').style.display = 'none';
     document.getElementById('keyDisplay').textContent = '—';
     this.updateUI();
+    document.getElementById('timeD').textContent = '00:00';
+    document.getElementById('speedD').textContent = '0';
+    document.getElementById('checkedD').textContent = '0';
   }
 };
 
