@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="theme-color" content="#F8F9FA"/>
+<meta name="theme-color" content="#F0F6FC"/>
 <title>Puzzle #71 Scanner</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 body {
-    background-color: #F2F4F8;
+    background-color: #E9F2FA; /* Fundo azul gelo muito claro */
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -21,7 +21,7 @@ body {
     width: 100%;
 }
 
-/* Header Compacto */
+/* Header Compacto - Azul */
 .app-header {
     display: flex;
     align-items: center;
@@ -29,7 +29,7 @@ body {
     margin-bottom: 12px;
 }
 .icon {
-    background: #B45309;
+    background: linear-gradient(135deg, #007AFF, #00B4DB); /* Azul Céu */
     width: 40px;
     height: 40px;
     border-radius: 12px;
@@ -40,20 +40,22 @@ body {
     font-size: 20px;
     font-weight: bold;
     flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.25);
 }
-.header-text h1 { font-size: 18px; font-weight: 700; line-height: 1.2; }
+.header-text h1 { font-size: 18px; font-weight: 700; line-height: 1.2; color: #0F172A; }
 .header-text span { font-size: 12px; color: #64748B; display: block; }
 
-/* Cartões Compactos */
+/* Cartões - Com bordas azuis sutis */
 .card {
     background: #FFFFFF;
     border-radius: 16px;
     padding: 14px 16px;
     margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.06);
+    border: 1px solid rgba(0, 122, 255, 0.08); /* Borda azul suave */
 }
 
-/* Inputs e Selects */
+/* Inputs e Selects - Foco Azul */
 .input-group { margin-bottom: 6px; }
 .input-group label { font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 3px; }
 .input-group select, .input-group input {
@@ -64,58 +66,75 @@ body {
     background: #F8FAFC;
     font-size: 14px;
     outline: none;
+    transition: all 0.2s;
 }
-.input-group input:focus { border-color: #B45309; background: #fff; }
+.input-group input:focus { border-color: #007AFF; background: #fff; box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1); }
 
-/* Botão de Arquivo */
+/* Botão de Arquivo - Azul */
 .file-wrapper { position: relative; display: inline-block; width: 100%; }
 .file-wrapper input[type="file"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
 .file-label {
     display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 8px; background: #F1F5F9; border-radius: 8px; color: #475569;
-    font-size: 13px; font-weight: 500; border: 1px dashed #CBD5E1; width: 100%;
+    padding: 8px; background: #F0F7FF; border-radius: 8px; color: #007AFF;
+    font-size: 13px; font-weight: 500; border: 1px dashed #A0CFFF; width: 100%;
 }
 
-/* Grid de Configuração (2 colunas no topo) */
-.config-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
+/* Grid de Configuração */
+.config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* Botões de Ação */
+/* Botões de Ação - Estilo Moderno */
 .actions { display: flex; gap: 10px; margin-bottom: 12px; }
 .btn {
     flex: 1; padding: 10px 0; border: none; border-radius: 10px;
     font-size: 14px; font-weight: 600; cursor: pointer; text-align: center;
+    transition: all 0.2s;
 }
-.btn-primary { background: #B45309; color: #fff; }
-.btn-primary:disabled { background: #CBD5E1; color: #94A3B8; }
-.btn-secondary { background: #F1F5F9; color: #475569; }
-.btn-danger { background: #FEE2E2; color: #B91C1C; font-size: 13px; padding: 8px 0; }
+.btn-primary {
+    background: linear-gradient(135deg, #007AFF, #0055CC);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { background: #CBD5E1; box-shadow: none; color: #94A3B8; }
 
-/* Painel de Status (Dashboard) */
+.btn-secondary {
+    background: transparent;
+    color: #007AFF;
+    border: 2px solid #007AFF;
+}
+.btn-secondary:active { background: rgba(0, 122, 255, 0.05); }
+.btn-secondary:disabled { border-color: #CBD5E1; color: #94A3B8; }
+
+.btn-danger {
+    background: #FEF2F2;
+    color: #EF4444;
+    border: 1px solid #FECACA;
+    font-size: 13px; padding: 8px 0;
+}
+.btn-danger:active { background: #FEE2E2; }
+
+/* Painel de Status */
 .status-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .status-left { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; }
 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .dot.idle { background: #94A3B8; }
-.dot.running { background: #22C55E; animation: pulse 1.2s infinite; }
-@keyframes pulse { 0%{opacity:1} 50%{opacity:0.3} 100%{opacity:1} }
+.dot.running { background: #007AFF; animation: pulse 1.2s infinite; }
+@keyframes pulse { 0%{opacity:1; box-shadow: 0 0 0 0 rgba(0,122,255,0.7)} 50%{opacity:0.6; box-shadow: 0 0 0 6px rgba(0,122,255,0)} 100%{opacity:1; box-shadow: 0 0 0 0 rgba(0,122,255,0)} }
 .status-label { color: #94A3B8; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
 
-/* Barra de Progresso */
+/* Barra de Progresso - Azul */
 .progress-container { width: 100%; height: 3px; background: #E2E8F0; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
-.progress-fill { height: 100%; width: 0%; background: #B45309; transition: width 0.3s ease; }
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #007AFF, #00B4DB); transition: width 0.3s ease; }
 
-/* Key Box (Apenas texto) */
+/* Key Box - Azul muito claro */
 .key-box {
-    background: #FEFCE8; border: 1px solid #E2E8F0; border-radius: 8px;
+    background: #F4F9FF; border: 1px solid #E0F0FF; border-radius: 8px;
     padding: 8px 10px; font-size: 12px; font-family: monospace;
-    color: #3F3F46; word-break: break-all; margin-bottom: 10px;
+    color: #007AFF; word-break: break-all; margin-bottom: 10px;
     min-height: 30px; display: flex; align-items: center;
 }
 
-/* Grid de Métricas (4 itens lado a lado - Compacto) */
+/* Grid de Métricas (4 itens) */
 .metrics-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -125,15 +144,15 @@ body {
 }
 .metric-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .metric-value { font-size: 16px; font-weight: 700; color: #0F172A; }
-.metric-value.orange { color: #B45309; }
+.metric-value.primary { color: #007AFF; }
 .metric-label { font-size: 10px; color: #64748B; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 3px; }
 
-/* Hit Box */
-.hit-box { background: #F0FDF4; border: 2px solid #22C55E; border-radius: 12px; padding: 10px; margin-top: 8px; display: none; }
-.hit-box h4 { color: #15803D; font-size: 14px; margin-bottom: 4px; }
-.hit-box pre { background: #fff; padding: 8px; border-radius: 6px; font-size: 11px; white-space: pre-wrap; word-break: break-all; border: 1px solid #DCFCE7; }
+/* Hit Box - Azul */
+.hit-box { background: #F0F7FF; border: 2px solid #007AFF; border-radius: 12px; padding: 10px; margin-top: 8px; display: none; }
+.hit-box h4 { color: #007AFF; font-size: 14px; margin-bottom: 4px; }
+.hit-box pre { background: #fff; padding: 8px; border-radius: 6px; font-size: 11px; white-space: pre-wrap; word-break: break-all; border: 1px solid #D0E6FF; color: #1E293B; }
 
-/* Responsividade para telas muito pequenas */
+/* Responsividade */
 @media (max-width: 380px) {
     .metrics-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
     .metric-item { align-items: flex-start; text-align: left; }
@@ -152,7 +171,7 @@ body {
         </div>
     </div>
 
-    <!-- Configurações (Compactas em Grid) -->
+    <!-- Configurações -->
     <div class="card">
         <div class="config-grid">
             <div class="input-group">
@@ -172,9 +191,7 @@ body {
                 <label>Workers</label>
                 <input type="number" id="wkIn" value="4" min="1" max="32" style="text-align:center;"/>
             </div>
-            <div class="input-group" style="display:flex; align-items:flex-end; justify-content:flex-end;">
-                <!-- Espaço vazio para alinhamento -->
-            </div>
+            <div class="input-group" style="display:flex; align-items:flex-end; justify-content:flex-end;"></div>
         </div>
     </div>
 
@@ -185,7 +202,7 @@ body {
     </div>
     <button class="btn btn-danger" id="btnReset" onclick="App.reset()" style="width:100%; margin-bottom:12px;">⟳ Reiniciar</button>
 
-    <!-- Painel de Status -->
+    <!-- Status -->
     <div class="card">
         <div class="status-header">
             <div class="status-left">
@@ -199,14 +216,13 @@ body {
         </div>
         <div class="key-box" id="keyDisplay">—</div>
 
-        <!-- Métricas Compactas -->
         <div class="metrics-grid">
             <div class="metric-item">
                 <span class="metric-value" id="timeD">00:00</span>
                 <span class="metric-label">⏱ Tempo</span>
             </div>
             <div class="metric-item">
-                <span class="metric-value orange" id="speedD">0</span>
+                <span class="metric-value primary" id="speedD">0</span>
                 <span class="metric-label">⚡ /s</span>
             </div>
             <div class="metric-item">
@@ -219,7 +235,6 @@ body {
             </div>
         </div>
 
-        <!-- Hit -->
         <div class="hit-box" id="hitBox">
             <h4>🏆 CHAVE ENCONTRADA!</h4>
             <pre id="hitContent"></pre>
@@ -349,7 +364,7 @@ self.onmessage=function(e){
 `;
 
 // ═══════════════════════════════════════════════════════════════════
-// MAIN APP (Compacto)
+// MAIN APP
 // ═══════════════════════════════════════════════════════════════════
 const App = {
   workers: [], running: false,
